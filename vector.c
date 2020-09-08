@@ -7,7 +7,6 @@ typedef struct
     void **data;
     size_t capacity;
     const allocator_t *allocator;
-    void (*destructor)(void *);
 } vector_impl_t;
 
 vector_t * vector_create()
@@ -18,33 +17,38 @@ vector_t * vector_create()
     this->capacity = 0;
     this->data = NULL;
     this->allocator = allocator;
-    this->destructor = NULL;
     return (vector_t *)this;
 }
 
-vector_t * vector_create_ext(const allocator_t *allocator, void (*destructor)(void *), size_t init_size)
+vector_t * vector_create_ext(const allocator_t *allocator, size_t init_size)
 {
     vector_impl_t *this = allocator->allocate(sizeof(vector_impl_t));
     this->size = init_size;
     this->capacity = init_size;
     this->data = init_size ? allocator->allocate(init_size * sizeof(void*)) : NULL;
     this->allocator = allocator;
-    this->destructor = destructor;
     return (vector_t *)this;
 }
 
 void vector_destroy(vector_t *iface)
 {
     vector_impl_t *this = (vector_impl_t*)iface;
-    if (this->size)
+    if (this->data)
     {
-        if (this->destructor)
+        this->allocator->release(this->data, this->size * sizeof(void*));
+    }
+    this->allocator->release(this, sizeof(vector_impl_t));
+}
+
+void vector_destroy_all(vector_t *iface, void (*destructor)(void *))
+{
+    vector_impl_t *this = (vector_impl_t*)iface;
+    if (this->data)
+    {
+        size_t k;
+        for (k = 0; k < this->size; k++)
         {
-            size_t k;
-            for (k = 0; k < this->size; k++)
-            {
-                this->destructor(this->data[k]);
-            }
+            destructor(this->data[k]);
         }
         this->allocator->release(this->data, this->size * sizeof(void*));
     }
@@ -80,15 +84,14 @@ void * vector_get(vector_t *iface, vector_index_t index)
     return index < this->size ? this->data[index] : NULL;
 }
 
-int vector_set(vector_t *iface, vector_index_t index, void *item)
+void * vector_set(vector_t *iface, vector_index_t index, void *item)
 {
     vector_impl_t *this = (vector_impl_t*)iface;
     if (index < this->size)
     {
-        if (this->destructor)
-            this->destructor(this->data[index]);
+        void *old_item = this->data[index];
         this->data[index] = item;
-        return 0;
+        return old_item;
     }
-    return -1;
+    return NULL;
 }

@@ -3,7 +3,7 @@
 
 int main(void)
 {
-    vector_t *v = vector_create_ext(get_system_allocator(), free, 0);
+    vector_t *v = vector_create_ext(get_system_allocator(), 0);
     
     for (int i = 0; i < 20; i++) {
         int *pi = malloc(sizeof(int));
@@ -11,9 +11,10 @@ int main(void)
         vector_push(v, pi);
     }
 
-    int *pi0 = malloc(sizeof(int));
-    *pi0 = 777;
-    vector_set(v, 10, pi0);
+    int *pi1 = malloc(sizeof(int));
+    *pi1 = 777;
+    int *pi0 = (int*)vector_set(v, 10, pi1);
+    free(pi0);
 
     for (vector_index_t k = 0; k < v->size; k++)
     {
