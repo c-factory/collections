@@ -112,6 +112,20 @@ void insert_item_into_vector(vector_t *iface, vector_index_t index, void *item)
     }
 }
 
+void * remove_item_from_vector(vector_t *iface, vector_index_t index)
+{
+    vector_impl_t *this = (vector_impl_t*)iface;
+    if (index >= this->size)
+        return NULL;
+
+    void *item = this->data[index];
+    size_t k;
+    for (k = index; k < this->size - 1; k++)
+        this->data[k] = this->data[k + 1];
+    this->size--;
+    return item;
+}
+
 void * get_vector_item(vector_t *iface, vector_index_t index)
 {
     vector_impl_t *this = (vector_impl_t*)iface;
@@ -132,6 +146,29 @@ void * set_vector_item(vector_t *iface, vector_index_t index, void *item)
         add_item_to_vector(iface, item);
         return NULL;
     }
+}
+
+vector_index_t index_of_item_of_vector(vector_t *iface, void *item, int (*comparator)(void*, void*))
+{
+    vector_impl_t *this = (vector_impl_t*)iface;
+    vector_index_t k;
+    if (comparator)
+    {
+        for (k = 0; k < this->size; k++)
+        {
+            if (0 == comparator(item, this->data[k]))
+                return k;
+        }
+    }
+    else
+    {
+        for (k = 0; k < this->size; k++)
+        {
+            if (item == this->data[k])
+                return k;
+        }
+    }
+    return this->size;
 }
 
 typedef struct

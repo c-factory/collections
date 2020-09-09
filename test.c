@@ -24,6 +24,12 @@ int main(void)
     *pi2 = 555;
     insert_item_into_vector(v, 5, pi2);
 
+    pi0 = (int*)remove_item_from_vector(v, v->size - 1);
+    free(pi0);
+
+    pi0 = (int*)remove_item_from_vector(v, index_of_item_of_vector(v, get_vector_item(v, 1), NULL));
+    free(pi0);
+
     iterator_t *it = create_iterator_from_vector(v);
     while (has_next_item(it))
     {
