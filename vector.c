@@ -9,7 +9,7 @@ typedef struct
     const allocator_t *allocator;
 } vector_impl_t;
 
-vector_t * vector_create()
+vector_t * create_vector()
 {
     const allocator_t *allocator = get_system_allocator();
     vector_impl_t *this = allocator->allocate(sizeof(vector_impl_t));
@@ -20,7 +20,7 @@ vector_t * vector_create()
     return (vector_t *)this;
 }
 
-vector_t * vector_create_ext(const allocator_t *allocator, size_t init_size)
+vector_t * create_vector_ext(const allocator_t *allocator, size_t init_size)
 {
     vector_impl_t *this = allocator->allocate(sizeof(vector_impl_t));
     this->size = init_size;
@@ -30,7 +30,7 @@ vector_t * vector_create_ext(const allocator_t *allocator, size_t init_size)
     return (vector_t *)this;
 }
 
-void vector_destroy(vector_t *iface)
+void destroy_vector(vector_t *iface)
 {
     vector_impl_t *this = (vector_impl_t*)iface;
     if (this->data)
@@ -40,7 +40,7 @@ void vector_destroy(vector_t *iface)
     this->allocator->release(this, sizeof(vector_impl_t));
 }
 
-void vector_destroy_all(vector_t *iface, void (*destructor)(void *))
+void destroy_vector_and_content(vector_t *iface, void (*destructor)(void *))
 {
     vector_impl_t *this = (vector_impl_t*)iface;
     if (this->data)
@@ -55,7 +55,7 @@ void vector_destroy_all(vector_t *iface, void (*destructor)(void *))
     this->allocator->release(this, sizeof(vector_impl_t));
 }
 
-void vector_push(vector_t *iface, void *item)
+void add_item_to_vector(vector_t *iface, void *item)
 {
     vector_impl_t *this = (vector_impl_t*)iface;
     if (this->size == this->capacity)
@@ -78,13 +78,13 @@ void vector_push(vector_t *iface, void *item)
     this->data[this->size++] = item;
 }
 
-void * vector_get(vector_t *iface, vector_index_t index)
+void * get_vector_item(vector_t *iface, vector_index_t index)
 {
     vector_impl_t *this = (vector_impl_t*)iface;
     return index < this->size ? this->data[index] : NULL;
 }
 
-void * vector_set(vector_t *iface, vector_index_t index, void *item)
+void * set_vector_item(vector_t *iface, vector_index_t index, void *item)
 {
     vector_impl_t *this = (vector_impl_t*)iface;
     if (index < this->size)
@@ -93,5 +93,50 @@ void * vector_set(vector_t *iface, vector_index_t index, void *item)
         this->data[index] = item;
         return old_item;
     }
+    else
+    {
+        add_item_to_vector(iface, item);
+        return NULL;
+    }
+}
+
+typedef struct
+{
+    void (*destroy)(iterator_t *iface);
+    bool (*has_next)(iterator_t *iface);
+    void* (*next)(iterator_t *iface);
+    vector_impl_t *vector;
+    vector_index_t index;
+} vector_iterator_t;
+
+static void destroy_vector_iterator(iterator_t *iface)
+{
+    vector_iterator_t *this = (vector_iterator_t*)iface;
+    this->vector->allocator->release(this, sizeof(vector_iterator_t));
+}
+
+static bool vector_iterator_has_next_item(iterator_t *iface)
+{
+    vector_iterator_t *this = (vector_iterator_t*)iface;
+    return this->index < this->vector->size;
+}
+
+static void * vector_iterator_get_next_item(iterator_t *iface)
+{
+    vector_iterator_t *this = (vector_iterator_t*)iface;
+    if (this->index < this->vector->size)
+        return this->vector->data[this->index++];
     return NULL;
+}
+
+iterator_t * create_iterator_from_vector(vector_t *iface)
+{
+    vector_impl_t *this = (vector_impl_t*)iface;
+    vector_iterator_t *iter = this->allocator->allocate(sizeof(vector_iterator_t));
+    iter->destroy = destroy_vector_iterator;
+    iter->has_next = vector_iterator_has_next_item;
+    iter->next = vector_iterator_get_next_item;
+    iter->vector = this;
+    iter->index = 0;
+    return (iterator_t*)iter;
 }

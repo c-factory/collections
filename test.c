@@ -3,24 +3,26 @@
 
 int main(void)
 {
-    vector_t *v = vector_create_ext(get_system_allocator(), 0);
+    vector_t *v = create_vector_ext(get_system_allocator(), 0);
     
     for (int i = 0; i < 20; i++) {
         int *pi = malloc(sizeof(int));
         *pi = i;
-        vector_push(v, pi);
+        add_item_to_vector(v, pi);
     }
 
     int *pi1 = malloc(sizeof(int));
     *pi1 = 777;
-    int *pi0 = (int*)vector_set(v, 10, pi1);
+    int *pi0 = (int*)set_vector_item(v, 10, pi1);
     free(pi0);
 
-    for (vector_index_t k = 0; k < v->size; k++)
+    iterator_t *it = create_iterator_from_vector(v);
+    while (has_next_item(it))
     {
-        int x = *(int*)(vector_get(v, k));
+        int x = *(int*)(next_item(it));
         printf("%d\n", x);
     }
+    destroy_iterator(it);
 
-    vector_destroy(v);
+    destroy_vector(v);
 }

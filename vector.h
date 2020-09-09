@@ -1,6 +1,7 @@
 #pragma once
 
 #include "allocator.h"
+#include "iterator.h"
 
 typedef struct
 {
@@ -10,10 +11,11 @@ typedef struct
 
 typedef size_t vector_index_t;
 
-vector_t * vector_create();
-vector_t * vector_create_ext(const allocator_t *allocator, size_t init_size);
-void vector_destroy(vector_t *iface);
-void vector_destroy_all(vector_t *iface, void (*destructor)(void *));
-void vector_push(vector_t *iface, void *item);
-void * vector_get(vector_t *iface, vector_index_t index);
-void * vector_set(vector_t *iface, vector_index_t index, void *item);
+vector_t * create_vector();
+vector_t * create_vector_ext(const allocator_t *allocator, size_t init_size);
+void destroy_vector(vector_t *iface);
+void destroy_vector_and_content(vector_t *iface, void (*destructor)(void *));
+void add_item_to_vector(vector_t *iface, void *item);
+void * get_vector_item(vector_t *iface, vector_index_t index);
+void * set_vector_item(vector_t *iface, vector_index_t index, void *item);
+iterator_t * create_iterator_from_vector(vector_t *iface);
