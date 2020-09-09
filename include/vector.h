@@ -19,7 +19,7 @@ typedef struct
 typedef size_t vector_index_t;
 
 vector_t * create_vector();
-vector_t * create_vector_ext(const allocator_t *allocator, size_t init_size);
+vector_t * create_vector_ext(const allocator_t *allocator, size_t init_capacity);
 void destroy_vector(vector_t *iface);
 void destroy_vector_and_content(vector_t *iface, void (*destructor)(void *));
 void add_item_to_vector(vector_t *iface, void *item);

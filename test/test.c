@@ -71,9 +71,24 @@ bool test_create_vector_and_check_size()
     return result;
 }
 
+bool test_create_vector_with_non_zero_capacity()
+{
+    bool result = true;
+    vector_t *v = create_vector_ext(&debug_allocator, 2);
+    do
+    {
+        for (int k = 0; k < 3; k++)
+            add_item_to_vector(v, NULL);
+        assert_equals(v->size, 3);
+    } while(false);
+    destroy_vector(v);
+    return result;
+}
+
 test_t test_list [] =
 {
-    { "create vector and check size", test_create_vector_and_check_size }
+    { "create vector and check size", test_create_vector_and_check_size },
+    { "create vector with non zero capacity", test_create_vector_with_non_zero_capacity }
 };
 
 int main(void)

@@ -26,12 +26,12 @@ vector_t * create_vector()
     return (vector_t *)this;
 }
 
-vector_t * create_vector_ext(const allocator_t *allocator, size_t init_size)
+vector_t * create_vector_ext(const allocator_t *allocator, size_t init_capacity)
 {
     vector_impl_t *this = allocator->allocate(sizeof(vector_impl_t));
-    this->size = init_size;
-    this->capacity = init_size;
-    this->data = init_size ? allocator->allocate(init_size * sizeof(void*)) : NULL;
+    this->size = 0;
+    this->capacity = init_capacity;
+    this->data = init_capacity ? allocator->allocate(init_capacity * sizeof(void*)) : NULL;
     this->allocator = allocator;
     return (vector_t *)this;
 }
