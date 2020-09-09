@@ -78,6 +78,40 @@ void add_item_to_vector(vector_t *iface, void *item)
     this->data[this->size++] = item;
 }
 
+void insert_item_into_vector(vector_t *iface, vector_index_t index, void *item)
+{
+    vector_impl_t *this = (vector_impl_t*)iface;
+    if (index < this->size)
+    {
+        if (this->size == this->capacity)
+        {
+            void **tmp;
+            size_t left_size = index;
+            size_t right_size = this->size - left_size;
+            this->capacity = this->capacity * 2;
+            tmp = this->allocator->allocate(this->capacity * sizeof(void*));
+            if (left_size) memcpy(tmp, this->data, left_size * sizeof(void*));
+            tmp[left_size] = item;
+            memcpy(tmp + left_size + 1, this->data + left_size, right_size * sizeof(void*));
+            this->allocator->release(this->data, this->size * sizeof(void*));
+            this->data = tmp;
+            this->size++;
+        }
+        else
+        {
+            size_t k;
+            for (k = this->size; k > index; k--)
+                this->data[k] = this->data[k - 1];
+            this->data[index] = item;
+            this->size++;
+        }        
+    }
+    else
+    {
+        add_item_to_vector(iface, item);
+    }
+}
+
 void * get_vector_item(vector_t *iface, vector_index_t index)
 {
     vector_impl_t *this = (vector_impl_t*)iface;
