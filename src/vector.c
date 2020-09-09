@@ -1,3 +1,9 @@
+/*
+    Copyright (c) 2020 Ivan Kniazkov <ivan.kniazkov.com>
+
+    Implementation of the vector interface
+*/
+
 #include "vector.h"
 #include <memory.h>
 
@@ -35,7 +41,7 @@ void destroy_vector(vector_t *iface)
     vector_impl_t *this = (vector_impl_t*)iface;
     if (this->data)
     {
-        this->allocator->release(this->data, this->size * sizeof(void*));
+        this->allocator->release(this->data, this->capacity * sizeof(void*));
     }
     this->allocator->release(this, sizeof(vector_impl_t));
 }

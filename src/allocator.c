@@ -1,3 +1,9 @@
+/*
+    Copyright (c) 2020 Ivan Kniazkov <ivan.kniazkov.com>
+
+    Implementation of memory allocators
+*/
+
 #include "allocator.h"
 #include <stdio.h>
 

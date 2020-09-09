@@ -1,3 +1,9 @@
+/*
+    Copyright (c) 2020 Ivan Kniazkov <ivan.kniazkov.com>
+
+    The descriptor of memory allocators
+*/
+
 #pragma once
 
 #include <stdlib.h>

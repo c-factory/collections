@@ -1,3 +1,10 @@
+/*
+    Copyright (c) 2020 Ivan Kniazkov <ivan.kniazkov.com>
+
+    The iterator interface
+    It returns elements from collections one by one
+*/
+
 #pragma once
 
 #include <stdbool.h>

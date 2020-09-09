@@ -1,3 +1,10 @@
+/*
+    Copyright (c) 2020 Ivan Kniazkov <ivan.kniazkov.com>
+
+    The vector interface
+    It is a structure in that elements are stored contiguously
+*/
+
 #pragma once
 
 #include "allocator.h"
