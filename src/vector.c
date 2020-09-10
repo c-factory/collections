@@ -56,7 +56,7 @@ void destroy_vector_and_content(vector_t *iface, void (*destructor)(void *))
         {
             destructor(this->data[k]);
         }
-        this->allocator->release(this->data, this->size * sizeof(void*));
+        this->allocator->release(this->data, this->capacity * sizeof(void*));
     }
     this->allocator->release(this, sizeof(vector_impl_t));
 }

@@ -13,7 +13,7 @@
 typedef struct
 {
     const size_t size;
-    const void const * data;
+    const void const ** data;
 } vector_t;
 
 typedef size_t vector_index_t;
