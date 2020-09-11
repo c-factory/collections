@@ -10,6 +10,7 @@ The created vector after using must be freed by the [`destroy_vector`](destroy_v
 
 ## Example
 
+```c
     #include "vector.h"
 
     int main()
@@ -19,3 +20,4 @@ The created vector after using must be freed by the [`destroy_vector`](destroy_v
         destroy_vector(v);
         return 0;
     }
+```

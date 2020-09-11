@@ -14,6 +14,7 @@ iface|Pointer to a `vector_t` interface
 
 ## Example
 
+```c
     #include "vector.h"
 
     int main()
@@ -23,3 +24,4 @@ iface|Pointer to a `vector_t` interface
         destroy_vector(v);
         return 0;
     }
+```

@@ -17,6 +17,7 @@ Destructor takes one argument (pointer to data). For example, as a destructor, t
 
 ## Example
 
+```c
     #include "vector.h"
     #include <stdio.h>
     #include <string.h>
@@ -46,4 +47,4 @@ Destructor takes one argument (pointer to data). For example, as a destructor, t
         destroy_vector_and_content(v, free);
         return 0;
     }
-    
+```

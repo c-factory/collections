@@ -12,6 +12,7 @@ The file `vector.h` contains all definitions.
 
 ## Data types
 
+```c
     typedef struct
     {
         const size_t size;
@@ -19,6 +20,7 @@ The file `vector.h` contains all definitions.
     } vector_t;
 
     typedef size_t vector_index_t;
+```
 
 ### vector_t
 
