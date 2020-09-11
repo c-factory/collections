@@ -2,7 +2,9 @@
 
 # create_vector
 
+```c
     vector_t * create_vector();
+```
 
 Returns a new empty vector. Never returns `NULL`.
 

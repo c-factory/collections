@@ -2,7 +2,9 @@
 
 # destroy_vector_and_content
 
+```c
     void destroy_vector_and_content(vector_t *iface, void (*destructor)(void *));
+```
 
 Destructs the vector and also the vector data using a destructor.
 

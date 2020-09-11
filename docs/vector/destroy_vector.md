@@ -2,7 +2,9 @@
 
 # destroy_vector
 
+```c
     void destroy_vector(vector_t *iface);
+```
 
 Destructs the vector itself, but does not destruct the vector data.
 
