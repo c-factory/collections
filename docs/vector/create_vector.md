@@ -2,7 +2,9 @@
 
 # create_vector
 
+```c
     vector_t * create_vector();
+```
 
 Returns a new empty vector. Never returns `NULL`.
 
@@ -10,6 +12,7 @@ The created vector after using must be freed by the [`destroy_vector`](destroy_v
 
 ## Example
 
+```c
     #include "vector.h"
 
     int main()
@@ -19,3 +22,4 @@ The created vector after using must be freed by the [`destroy_vector`](destroy_v
         destroy_vector(v);
         return 0;
     }
+```

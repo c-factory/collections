@@ -2,7 +2,9 @@
 
 # destroy_vector_and_content
 
+```c
     void destroy_vector_and_content(vector_t *iface, void (*destructor)(void *));
+```
 
 Destructs the vector and also the vector data using a destructor.
 
@@ -17,6 +19,7 @@ Destructor takes one argument (pointer to data). For example, as a destructor, t
 
 ## Example
 
+```c
     #include "vector.h"
     #include <stdio.h>
     #include <string.h>
@@ -46,4 +49,4 @@ Destructor takes one argument (pointer to data). For example, as a destructor, t
         destroy_vector_and_content(v, free);
         return 0;
     }
-    
+```

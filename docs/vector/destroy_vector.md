@@ -2,7 +2,9 @@
 
 # destroy_vector
 
+```c
     void destroy_vector(vector_t *iface);
+```
 
 Destructs the vector itself, but does not destruct the vector data.
 
@@ -14,6 +16,7 @@ iface|Pointer to a `vector_t` interface
 
 ## Example
 
+```c
     #include "vector.h"
 
     int main()
@@ -23,3 +26,4 @@ iface|Pointer to a `vector_t` interface
         destroy_vector(v);
         return 0;
     }
+```
