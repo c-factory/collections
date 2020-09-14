@@ -14,4 +14,4 @@ Here the list of all classes:
 
 ## Data access
 
-* Iterator
+* **[Iterator](iterator/iterator.md)** - the interface for sequentially accessing items in a collection.

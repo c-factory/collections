@@ -26,8 +26,8 @@ The file `vector.h` contains all definitions.
 
 The `vector_t` struct contains 2 fields:
 
-* **size** - current vector size
-* **data** - data array
+* **size** - current vector size;
+* **data** - data array.
 
 Both fields cannot be modified directly. All changes are performed with functions only.
 
