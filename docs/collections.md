@@ -6,7 +6,7 @@ Here the list of all classes:
 
 ## Memory
 
-* Allocator
+* **[Allocators](allocator/allocator.md)** - allocation and freeing memory blocks;
 
 ## Containers
 

@@ -36,7 +36,7 @@ Destructor takes one argument (pointer to data). For example, as a destructor, t
             size_t len = strlen(buff);
             if (len < 2)
                 break;
-            char *str = malloc(len);
+            char *str = malloc(len); // here memory for strings is allocating
             memcpy(str, buff, len - 1);
             str[len - 1] = 0;
             add_item_to_vector(v, str);
@@ -46,7 +46,24 @@ Destructor takes one argument (pointer to data). For example, as a destructor, t
         {
             printf("%s\n", (char*)v->data[k]);
         }
-        destroy_vector_and_content(v, free);
+        destroy_vector_and_content(v, free); /* here, the stdlib 'free' method is used
+                                                for strings deallocation */
         return 0;
     }
 ```
+
+Output:
+
+    Write one or more lines and then press enter:
+    > my
+    > name
+    > is
+    > Johnny
+    > K.
+    >
+    Done. Here the data you entered:
+    my
+    name
+    is
+    Johnny
+    K

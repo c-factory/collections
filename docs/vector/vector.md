@@ -41,3 +41,4 @@ Index for accessing vector items. It's an unsigned integer.
 * **[create_vector_ext](create_vector_ext.md)** - creates an empty vector with initial capacity using a specified memory allocator;
 * **[destroy_vector](destroy_vector.md)** - releases a vector;
 * **[destroy_vector_and_content](destroy_vector_and_content.md)** - releases a vector and also its content using a destructor;
+* **[add_item_to_vector](add_item_to_vector.md)** - adds an item to the end of the vector;

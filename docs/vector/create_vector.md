@@ -8,7 +8,7 @@
 
 Returns a new empty vector. Never returns `NULL`.
 
-The created vector after using must be freed by the [`destroy_vector`](destroy_vector.md) (or the `destroy_vector_and_content`) function.
+The created vector after using must be freed by the [`destroy_vector`](destroy_vector.md) (or the [`destroy_vector_and_content`](destroy_vector_and_content.md)) function.
 
 ## Example
 
