@@ -6,7 +6,7 @@
     void add_item_to_vector(vector_t *iface, void *item);
 ```
 
-Adds an item to the end of the vector.
+Adds an item to the end of a vector.
 
 ## Parameters
 
