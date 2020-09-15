@@ -2,7 +2,8 @@
 
 # Iterator
 
-Iterator is the interface for sequentially accessing items in a collection. Each collection provides its own implementation of the iterator.
+Iterator is the interface for sequentially accessing items in a collection. Each collection provides its own implementation of the iterator.\
+Iterators do not contain a copy of a collection, it contains only pointers. Therefore, as a rule, it is not possible to change the collection's data while the iterator is in use.
 
 ## Include
 
