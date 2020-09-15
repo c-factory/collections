@@ -9,7 +9,7 @@
 typedef struct
 {
     size_t size;
-    balanced_tree_t * root;
+    bt_node_t * root;
     const allocator_t * allocator;
     int (*comparator)(void*, void*);
 } tree_set_impl_t;
@@ -30,7 +30,7 @@ tree_set_t * create_tree_set(int (*comparator)(void*, void*))
 void add_item_to_tree_set(tree_set_t *iface, void *item)
 {
     tree_set_impl_t *this = (tree_set_impl_t*)iface;
-    balanced_tree_t *node = create_node_of_balanced_tree(this->allocator);
+    bt_node_t *node = create_node_of_balanced_tree(this->allocator);
     node->key = item;
     this->root = insert_node_into_balanced_tree(this->root, node, this->comparator);
     this->size++;

@@ -6,9 +6,9 @@
 
 #include "balanced_tree.h"
 
-balanced_tree_t * create_node_of_balanced_tree(const allocator_t *allocator)
+bt_node_t * create_node_of_balanced_tree(const allocator_t *allocator)
 {
-	balanced_tree_t *node = allocator->allocate(sizeof(balanced_tree_t));
+	bt_node_t *node = allocator->allocate(sizeof(bt_node_t));
 	node->key = NULL;
 	node->height = 1;
 	node->left = NULL;
@@ -16,26 +16,26 @@ balanced_tree_t * create_node_of_balanced_tree(const allocator_t *allocator)
 	return node;
 }
 
-static __inline int get_node_height(balanced_tree_t* p)
+static __inline int get_node_height(bt_node_t* p)
 {
 	return p ? p->height : 0;
 }
 
-static __inline int calc_balance_factor (balanced_tree_t* p)
+static __inline int calc_balance_factor (bt_node_t* p)
 {
 	return get_node_height(p->right) - get_node_height(p->left);
 }
 
-static __inline void fix_node_height(balanced_tree_t* p)
+static __inline void fix_node_height(bt_node_t* p)
 {
 	int hl = get_node_height(p->left);
 	int hr = get_node_height(p->right);
 	p->height = ( hl > hr ? hl : hr ) + 1;
 }
 
-static balanced_tree_t * rotate_right(balanced_tree_t* p)
+static bt_node_t * rotate_right(bt_node_t* p)
 {
-	balanced_tree_t* q = p->left;
+	bt_node_t* q = p->left;
 	p->left = q->right;
 	q->right = p;
 	fix_node_height(p);
@@ -43,9 +43,9 @@ static balanced_tree_t * rotate_right(balanced_tree_t* p)
 	return q;
 }
 
-static balanced_tree_t * rotate_left(balanced_tree_t* q)
+static bt_node_t * rotate_left(bt_node_t* q)
 {
-	balanced_tree_t* p = q->right;
+	bt_node_t* p = q->right;
 	q->right = p->left;
 	p->left = q;
 	fix_node_height(q);
@@ -53,7 +53,7 @@ static balanced_tree_t * rotate_left(balanced_tree_t* q)
 	return p;
 }
 
-static balanced_tree_t * balance(balanced_tree_t* p)
+static bt_node_t * balance(bt_node_t* p)
 {
 	fix_node_height(p);
 	int pbf = calc_balance_factor(p);
@@ -72,7 +72,7 @@ static balanced_tree_t * balance(balanced_tree_t* p)
 	return p;
 }
 
-balanced_tree_t * insert_node_into_balanced_tree(balanced_tree_t *root, balanced_tree_t *new_node, int (*comparator)(void*, void*))
+bt_node_t * insert_node_into_balanced_tree(bt_node_t *root, bt_node_t *new_node, int (*comparator)(void*, void*))
 {
 	if( !root )
 		return new_node;
@@ -119,7 +119,7 @@ node* remove(node* p, int k) // удаление ключа k из дерева 
 }
 */
 
-void traversal_of_balanced_tree(balanced_tree_t *root, void (*callback)(void*))
+void traversal_of_balanced_tree(bt_node_t *root, void (*callback)(void*))
 {
 	if (root->left)
 		traversal_of_balanced_tree(root->left, callback);

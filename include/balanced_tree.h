@@ -9,16 +9,16 @@
 
 #include "allocator.h"
 
-typedef struct balanced_tree_t balanced_tree_t;
+typedef struct bt_node_t bt_node_t; // balanced tree node
 
-struct balanced_tree_t
+struct bt_node_t
 {
 	void * key;
 	int height;
-	balanced_tree_t * left;
-	balanced_tree_t * right;
+	bt_node_t * left;
+	bt_node_t * right;
 };
 
-balanced_tree_t * create_node_of_balanced_tree(const allocator_t *allocator);
-balanced_tree_t * insert_node_into_balanced_tree(balanced_tree_t *root, balanced_tree_t *node, int (*comparator)(void*, void*));
-void traversal_of_balanced_tree(balanced_tree_t *root, void (*callback)(void*));
+bt_node_t * create_node_of_balanced_tree(const allocator_t *allocator);
+bt_node_t * insert_node_into_balanced_tree(bt_node_t *root, bt_node_t *node, int (*comparator)(void*, void*));
+void traversal_of_balanced_tree(bt_node_t *root, void (*callback)(void*));
