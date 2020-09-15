@@ -18,7 +18,8 @@ index|Item position
 
 ## Complexity
 
-O(N)
+O(N) common case\
+O(1) if the last element is removed
 
 ## Example
 

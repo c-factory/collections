@@ -46,4 +46,5 @@ Index for accessing vector items. It's an unsigned integer.
 * **[remove_item_from_vector](remove_item_from_vector.md)** - removes an item from a vector, from specified position;
 * **[get_vector_item](get_vector_item.md)** - returns an item from a vector, from specified position;
 * **[set_vector_item](set_vector_item.md)** - replaces an item from a vector at specified position;
-
+* **[index_of_item_of_vector](index_of_item_of_vector.md)** - searches an item position in a vector;
+* **[create_iterator_from_vector](create_iterator_from_vector.md)** - returns an iterator, created from a vector.
