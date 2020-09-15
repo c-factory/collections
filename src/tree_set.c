@@ -16,14 +16,6 @@ typedef struct
 
 typedef struct node_t node_t;
 
-struct node_t
-{
-	void * key;
-	int height;
-	node_t * left;
-	node_t * right;
-};
-
 tree_set_t * create_tree_set(int (*comparator)(void*, void*))
 {
     const allocator_t *allocator = get_system_allocator();
@@ -38,11 +30,14 @@ tree_set_t * create_tree_set(int (*comparator)(void*, void*))
 void add_item_to_tree_set(tree_set_t *iface, void *item)
 {
     tree_set_impl_t *this = (tree_set_impl_t*)iface;
-    node_t *node = this->allocator->allocate(sizeof(node_t));
+    balanced_tree_t *node = create_node_of_balanced_tree(this->allocator);
     node->key = item;
-    node->height = 1;
-    node->left = NULL;
-    node->right = NULL;
-    this->root = insert_node_into_balanced_tree(this->root, (balanced_tree_t*)node, this->comparator);
+    this->root = insert_node_into_balanced_tree(this->root, node, this->comparator);
     this->size++;
+}
+
+void traverse_over_tree_set(tree_set_t *iface, void (*callback)(void*))
+{
+    tree_set_impl_t *this = (tree_set_impl_t*)iface;
+    traversal_of_balanced_tree(this->root, callback);
 }

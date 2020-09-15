@@ -2,13 +2,9 @@
     #include <stdio.h>
     #include <string.h>
 
-    void print_balance_tree(const balanced_tree_t * const node)
+    void print_string(void *obj)
     {
-        if (node->left)
-            print_balance_tree(node->left);
-        printf("%s\n", node->key);
-        if (node->right)
-            print_balance_tree(node->right);
+        printf("%s\n", obj);
     }
 
     int main()
@@ -21,6 +17,6 @@
         add_item_to_tree_set(set, "iterator");
         add_item_to_tree_set(set, "allocator");
 
-        print_balance_tree(set->root);
+        traverse_over_tree_set(set, print_string);
         return 0;
     }
