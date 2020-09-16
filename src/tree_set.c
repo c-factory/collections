@@ -27,6 +27,14 @@ tree_set_t * create_tree_set(int (*comparator)(void*, void*))
     return (tree_set_t *)this;
 }
 
+void destroy_tree_set(tree_set_t *iface)
+{
+    tree_set_impl_t *this = (tree_set_impl_t*)iface;
+    if (this->root)
+        destroy_balanced_tree(this->root, this->allocator, sizeof(bt_node_t));
+    this->allocator->release(this, sizeof(tree_set_impl_t));
+}
+
 void add_item_to_tree_set(tree_set_t *iface, void *item)
 {
     tree_set_impl_t *this = (tree_set_impl_t*)iface;

@@ -25,5 +25,6 @@
         }
         destroy_iterator(iter);
 
+        destroy_tree_set(set);
         return 0;
     }

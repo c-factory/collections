@@ -17,6 +17,16 @@ bt_node_t * create_node_of_balanced_tree(const allocator_t *allocator)
 	return node;
 }
 
+void * destroy_balanced_tree(bt_node_t *root, const allocator_t *allocator, size_t node_size)
+{
+	if (root->left)
+		destroy_balanced_tree(root->left, allocator, node_size);
+	if (root->right)
+		destroy_balanced_tree(root->right, allocator, node_size);
+
+	allocator->release(root, node_size);
+}
+
 static __inline int get_node_height(bt_node_t* p)
 {
 	return p ? p->height : 0;

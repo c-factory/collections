@@ -15,6 +15,7 @@ typedef struct
 } tree_set_t;
 
 tree_set_t * create_tree_set(int (*comparator)(void*, void*));
+void destroy_tree_set(tree_set_t *iface);
 void add_item_to_tree_set(tree_set_t *iface, void *item);
 void traverse_over_tree_set(tree_set_t *iface, void (*callback)(void*));
 iterator_t * create_iterator_from_tree_set(tree_set_t *iface);
