@@ -94,6 +94,17 @@ bt_node_t * insert_node_into_balanced_tree(bt_node_t *root, bt_node_t *new_node,
 	return balance(root);
 }
 
+bt_node_t * find_node_in_balanced_tree(bt_node_t *root, void *key, int (*comparator)(void*, void*))
+{
+	if (!root)
+		return NULL;
+
+	int result = comparator(key, root->key);
+	if (0 == result)
+		return root;
+	return find_node_in_balanced_tree(result < 0 ? root->left : root->right, key, comparator);
+}
+
 /*
 node* findmin(node* p) // поиск узла с минимальным ключом в дереве p 
 {
