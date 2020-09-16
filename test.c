@@ -26,8 +26,23 @@
         }
         destroy_iterator(iter);
 
-        printf("%d\n", tree_set_contains_item(set, "include"));
+        printf("%d\n", tree_set_contains_item(set, "class"));
         printf("%d\n", tree_set_contains_item(set, "blah_blah_blah"));
+        printf("%d\n", set->size);
+
+        printf("--------------------\n");
+
+        printf("%d\n", remove_item_from_tree_set(set, "class"));
+        printf("%d\n", remove_item_from_tree_set(set, "blah_blah_blah"));
+        printf("%d\n", set->size);
+        
+        iter = create_iterator_from_tree_set(set);
+        while(has_next_item(iter))
+        {
+            void *data = next_item(iter);
+            printf("%s\n", data);
+        }
+        destroy_iterator(iter);
 
         destroy_tree_set(set);
         return 0;

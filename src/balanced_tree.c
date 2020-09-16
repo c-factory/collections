@@ -105,41 +105,53 @@ bt_node_t * find_node_in_balanced_tree(bt_node_t *root, void *key, int (*compara
 	return find_node_in_balanced_tree(result < 0 ? root->left : root->right, key, comparator);
 }
 
-/*
-node* findmin(node* p) // поиск узла с минимальным ключом в дереве p 
+bt_node_t * find_min_node(bt_node_t* p)
 {
-	return p->left?findmin(p->left):p;
+	return p->left ? find_min_node(p->left) : p;
 }
 
-node* removemin(node* p) // удаление узла с минимальным ключом из дерева p
+bt_node_t * remove_min_node(bt_node_t* p)
 {
 	if( p->left==0 )
 		return p->right;
-	p->left = removemin(p->left);
+	p->left = remove_min_node(p->left);
 	return balance(p);
 }
 
-node* remove(node* p, int k) // удаление ключа k из дерева p
+bt_node_t * remove_node_from_balanced_tree(bt_node_t *root, void *key, int (*comparator)(void*, void*), bt_node_t **removed_node)
 {
-	if( !p ) return 0;
-	if( k < p->key )
-		p->left = remove(p->left,k);
-	else if( k > p->key )
-		p->right = remove(p->right,k);	
-	else //  k == p->key 
+	if( !root )
+		return NULL;
+	int result = comparator(key, root->key);
+	if ( result < 0 )
 	{
-		node* q = p->left;
-		node* r = p->right;
-		delete p;
-		if( !r ) return q;
-		node* min = findmin(r);
-		min->right = removemin(r);
+		bt_node_t* new_left = remove_node_from_balanced_tree(root->left, key, comparator, removed_node);
+		if (!new_left)
+			return NULL;
+		root->left = new_left;
+		return balance(root);
+	}
+	else if ( result > 0 )
+	{
+		bt_node_t* new_right = remove_node_from_balanced_tree(root->right, key, comparator, removed_node);
+		if (!new_right)
+			return NULL;
+		root->right = new_right;
+		return balance(root);
+	}
+	else
+	{
+		*removed_node = root;
+		bt_node_t* q = root->left;
+		bt_node_t* r = root->right;
+		if( !r )
+			return q;
+		bt_node_t* min = find_min_node(r);
+		min->right = remove_min_node(r);
 		min->left = q;
 		return balance(min);
 	}
-	return balance(p);
 }
-*/
 
 void traversal_of_balanced_tree(bt_node_t *root, void (*callback)(void*))
 {

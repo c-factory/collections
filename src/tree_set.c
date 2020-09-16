@@ -62,6 +62,19 @@ bool tree_set_contains_item(tree_set_t *iface, void *item)
     return existing_node != NULL;
 }
 
+bool remove_item_from_tree_set(tree_set_t *iface, void *item)
+{
+    tree_set_impl_t *this = (tree_set_impl_t*)iface;
+    bt_node_t *removed_item;
+    bt_node_t *new_root = remove_node_from_balanced_tree(this->root, item, this->comparator, &removed_item);
+    if (!new_root)
+        return false;
+    this->root = new_root;
+    this->size--;
+    this->allocator->release(removed_item, sizeof(bt_node_t));
+    return true;
+}
+
 void traverse_over_tree_set(tree_set_t *iface, void (*callback)(void*))
 {
     tree_set_impl_t *this = (tree_set_impl_t*)iface;
