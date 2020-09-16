@@ -41,3 +41,9 @@ void traverse_over_tree_set(tree_set_t *iface, void (*callback)(void*))
     tree_set_impl_t *this = (tree_set_impl_t*)iface;
     traversal_of_balanced_tree(this->root, callback);
 }
+
+iterator_t * create_iterator_from_tree_set(tree_set_t *iface)
+{
+    tree_set_impl_t *this = (tree_set_impl_t*)iface;
+    return create_iterator_from_balanced_tree(this->root, this->allocator);
+}

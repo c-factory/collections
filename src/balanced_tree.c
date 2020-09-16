@@ -5,6 +5,7 @@
 */
 
 #include "balanced_tree.h"
+#include <assert.h>
 
 bt_node_t * create_node_of_balanced_tree(const allocator_t *allocator)
 {
@@ -126,4 +127,136 @@ void traversal_of_balanced_tree(bt_node_t *root, void (*callback)(void*))
 	callback(root->key);
 	if (root->right)
 		traversal_of_balanced_tree(root->right, callback);
+}
+
+typedef enum
+{
+	state_not_visited,
+	state_next_left,
+	state_next_this,
+	state_next_right
+} bt_traversal_state;
+
+typedef struct
+{
+	bt_node_t *node;
+	bt_traversal_state state;
+} bt_traversal_data_t;
+
+typedef struct
+{
+    void (*destroy)(iterator_t *iface);
+    bool (*has_next)(iterator_t *iface);
+    void* (*next)(iterator_t *iface);
+	const allocator_t *allocator;
+    bt_traversal_data_t *data;
+	int max_depth;
+	int depth;
+} bt_iterator_t;
+
+static void destroy_bt_iterator(iterator_t *iface)
+{
+    bt_iterator_t *this = (bt_iterator_t*)iface;
+	if (this->data)
+		this->allocator->release(this->data, (size_t)(sizeof(bt_traversal_data_t) * this->max_depth));
+    this->allocator->release(this, sizeof(bt_iterator_t));
+}
+
+static bool bt_iterator_has_next_item(iterator_t *iface)
+{
+    bt_iterator_t *this = (bt_iterator_t*)iface;
+    return this->depth >= 0;
+}
+
+static __inline void add_node_to_iterator(bt_iterator_t *this, bt_node_t *node)
+{
+	this->depth++;
+	assert(this->depth < this->max_depth);
+	this->data[this->depth].node = node;
+	this->data[this->depth].state = state_not_visited;	
+}
+
+static void prepare_next_item(bt_iterator_t *this)
+{
+	while(true)	
+	{
+		bt_traversal_data_t *data = &this->data[this->depth];
+		switch(data->state)
+		{
+			case state_not_visited:
+			{
+				bt_node_t *node = data->node;
+				if (node->left)
+				{
+					data->state = state_next_left;
+					add_node_to_iterator(this, node->left);
+				}
+				else
+				{
+					data->state = state_next_this;
+					return;
+				}
+				break;
+			}
+
+			case state_next_left:
+				data->state = state_next_this;
+				return;
+
+			case state_next_this:
+			{
+				bt_node_t *node = data->node;
+				if (node->right)
+				{
+					data->state = state_next_right;
+					add_node_to_iterator(this, node->right);
+				}
+				else
+				{
+					this->depth--;
+					if (this->depth < 0)
+						return;
+				}
+				break;
+			}
+
+			case state_next_right:
+				this->depth--;
+				if (this->depth < 0)
+					return;
+				break;
+		}
+	};
+}
+
+static void * bt_iterator_get_next_item(iterator_t *iface)
+{
+    bt_iterator_t *this = (bt_iterator_t*)iface;
+	assert(this->data[this->depth].state == state_next_this);
+	void *item = this->data[this->depth].node->key;
+	prepare_next_item(this);
+	return item;
+}
+
+iterator_t * create_iterator_from_balanced_tree(bt_node_t *root, const allocator_t *allocator)
+{
+	bt_iterator_t *this = allocator->allocate(sizeof(bt_iterator_t));
+	this->destroy = destroy_bt_iterator;
+	this->has_next = bt_iterator_has_next_item;
+	this->next = bt_iterator_get_next_item;
+	this->allocator = allocator;
+	this->depth = -1;
+	if (!root)
+	{
+		this->max_depth = 0;
+		this->data = NULL;
+	}
+	else
+	{
+		this->max_depth = root->height;
+		this->data = allocator->allocate((size_t)sizeof(bt_traversal_data_t) * this->max_depth);
+		add_node_to_iterator(this, root);
+		prepare_next_item(this);
+	}	
+	return (iterator_t*)this;
 }

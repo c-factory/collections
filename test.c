@@ -2,10 +2,10 @@
     #include <stdio.h>
     #include <string.h>
 
-    void print_string(void *obj)
-    {
-        printf("%s\n", obj);
-    }
+    //void print_string(void *obj)
+    //{
+    //    printf("%s\n", obj);
+    //}
 
     int main()
     {
@@ -17,6 +17,13 @@
         add_item_to_tree_set(set, "iterator");
         add_item_to_tree_set(set, "allocator");
 
-        traverse_over_tree_set(set, print_string);
+        iterator_t *iter = create_iterator_from_tree_set(set);
+        while(has_next_item(iter))
+        {
+            void *data = next_item(iter);
+            printf("%s\n", data);
+        }
+        destroy_iterator(iter);
+
         return 0;
     }
