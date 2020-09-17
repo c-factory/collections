@@ -34,11 +34,50 @@ tree_set_t * create_tree_set(int (*comparator)(void*, void*))
     return (tree_set_t *)this;
 }
 
+tree_set_t * create_tree_set_ext(int (*comparator)(void*, void*), const allocator_t *allocator)
+{
+    tree_set_impl_t *this = allocator->allocate(sizeof(tree_set_impl_t));
+    this->size = 0;
+    this->root = NULL;
+    this->allocator = allocator;
+    this->comparator = comparator ? comparator : default_comparator;
+    return (tree_set_t *)this;
+}
+
+static void destroy_node(bt_node_t *node, const allocator_t *allocator)
+{
+    if (node->left)
+        destroy_node(node->left, allocator);
+    if (node->right)
+        destroy_node(node->right, allocator);
+
+    allocator->release(node, sizeof(bt_node_t));
+}
+
 void destroy_tree_set(tree_set_t *iface)
 {
     tree_set_impl_t *this = (tree_set_impl_t*)iface;
     if (this->root)
-        destroy_balanced_tree(this->root, this->allocator, sizeof(bt_node_t));
+        destroy_node(this->root, this->allocator);
+    this->allocator->release(this, sizeof(tree_set_impl_t));
+}
+
+static void destroy_node_and_content(bt_node_t *node, const allocator_t *allocator, void (*destructor)(void *))
+{
+    if (node->left)
+        destroy_node_and_content(node->left, allocator, destructor);
+    if (node->right)
+        destroy_node_and_content(node->right, allocator, destructor);
+
+    destructor(node->key);
+    allocator->release(node, sizeof(bt_node_t));
+}
+
+void destroy_tree_set_and_content(tree_set_t *iface, void (*destructor)(void *))
+{
+    tree_set_impl_t *this = (tree_set_impl_t*)iface;
+    if (this->root)
+        destroy_node_and_content(this->root, this->allocator, destructor);
     this->allocator->release(this, sizeof(tree_set_impl_t));
 }
 
@@ -48,14 +87,15 @@ bool add_item_to_tree_set(tree_set_t *iface, void *item)
     bt_node_t *old_node = find_node_in_balanced_tree(this->root, item, this->comparator);
     if (old_node)
         return false;
-    bt_node_t *node = create_node_of_balanced_tree(this->allocator);
+    bt_node_t *node = this->allocator->allocate(sizeof(bt_node_t));
+    init_node_of_balanced_tree(node);
     node->key = item;
     this->root = insert_node_into_balanced_tree(this->root, node, this->comparator);
     this->size++;
     return true;
 }
 
-bool tree_set_contains_item(tree_set_t *iface, void *item)
+bool is_there_item_in_tree_set(tree_set_t *iface, void *item)
 {
     tree_set_impl_t *this = (tree_set_impl_t*)iface;
     bt_node_t *existing_node = find_node_in_balanced_tree(this->root, item, this->comparator);
@@ -78,7 +118,7 @@ bool remove_item_from_tree_set(tree_set_t *iface, void *item)
 void traverse_over_tree_set(tree_set_t *iface, void (*callback)(void*))
 {
     tree_set_impl_t *this = (tree_set_impl_t*)iface;
-    traversal_of_balanced_tree(this->root, callback);
+    traverse_over_balanced_tree(this->root, callback);
 }
 
 iterator_t * create_iterator_from_tree_set(tree_set_t *iface)

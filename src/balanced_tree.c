@@ -7,24 +7,12 @@
 #include "balanced_tree.h"
 #include <assert.h>
 
-bt_node_t * create_node_of_balanced_tree(const allocator_t *allocator)
+void init_node_of_balanced_tree(bt_node_t *node)
 {
-	bt_node_t *node = allocator->allocate(sizeof(bt_node_t));
 	node->key = NULL;
 	node->height = 1;
 	node->left = NULL;
 	node->right = NULL;
-	return node;
-}
-
-void * destroy_balanced_tree(bt_node_t *root, const allocator_t *allocator, size_t node_size)
-{
-	if (root->left)
-		destroy_balanced_tree(root->left, allocator, node_size);
-	if (root->right)
-		destroy_balanced_tree(root->right, allocator, node_size);
-
-	allocator->release(root, node_size);
 }
 
 static __inline int get_node_height(bt_node_t* p)
@@ -153,13 +141,13 @@ bt_node_t * remove_node_from_balanced_tree(bt_node_t *root, void *key, int (*com
 	}
 }
 
-void traversal_of_balanced_tree(bt_node_t *root, void (*callback)(void*))
+void traverse_over_balanced_tree(bt_node_t *root, void (*callback)(void*))
 {
 	if (root->left)
-		traversal_of_balanced_tree(root->left, callback);
+		traverse_over_balanced_tree(root->left, callback);
 	callback(root->key);
 	if (root->right)
-		traversal_of_balanced_tree(root->right, callback);
+		traverse_over_balanced_tree(root->right, callback);
 }
 
 typedef enum
