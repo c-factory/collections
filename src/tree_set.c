@@ -105,9 +105,9 @@ bool is_there_item_in_tree_set(tree_set_t *iface, void *item)
 bool remove_item_from_tree_set(tree_set_t *iface, void *item)
 {
     tree_set_impl_t *this = (tree_set_impl_t*)iface;
-    bt_node_t *removed_item;
+    bt_node_t *removed_item = NULL;
     bt_node_t *new_root = remove_node_from_balanced_tree(this->root, item, this->comparator, &removed_item);
-    if (!new_root)
+    if (!removed_item)
         return false;
     this->root = new_root;
     this->size--;

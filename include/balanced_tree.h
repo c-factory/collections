@@ -20,13 +20,6 @@ struct bt_node_t
 	bt_node_t * right;
 };
 
-typedef struct bt_destructor_t bt_destructor_t;
-
-struct bt_destructor_t
-{
-	void (*destroy)(bt_destructor_t *iface, bt_node_t *node);
-};
-
 void init_node_of_balanced_tree(bt_node_t *node);
 bt_node_t * insert_node_into_balanced_tree(bt_node_t *root, bt_node_t *node, int (*comparator)(void*, void*));
 bt_node_t * find_node_in_balanced_tree(bt_node_t *root, void *key, int (*comparator)(void*, void*));

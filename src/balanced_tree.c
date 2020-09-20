@@ -114,7 +114,7 @@ bt_node_t * remove_node_from_balanced_tree(bt_node_t *root, void *key, int (*com
 	if ( result < 0 )
 	{
 		bt_node_t* new_left = remove_node_from_balanced_tree(root->left, key, comparator, removed_node);
-		if (!new_left)
+		if (!new_left && !(*removed_node))
 			return NULL;
 		root->left = new_left;
 		return balance(root);
@@ -122,7 +122,7 @@ bt_node_t * remove_node_from_balanced_tree(bt_node_t *root, void *key, int (*com
 	else if ( result > 0 )
 	{
 		bt_node_t* new_right = remove_node_from_balanced_tree(root->right, key, comparator, removed_node);
-		if (!new_right)
+		if (!new_right && !(*removed_node))
 			return NULL;
 		root->right = new_right;
 		return balance(root);
