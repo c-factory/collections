@@ -11,6 +11,7 @@ Here the list of all classes:
 ## Containers
 
 * **[Vector](vector/vector.md)** - a container in which elements are stored contiguously;
+* **[Tree Set](tree_set/tree_set.md)** - a set of unique items, based on binary balanced tree;
 
 ## Data access
 
