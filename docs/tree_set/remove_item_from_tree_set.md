@@ -1,3 +1,28 @@
+[Collections](../collections.md) &rarr; [Tree Set](tree_set.md) &rarr;
+
+# remove_item_from_tree_set
+
+```c
+    bool remove_item_from_tree_set(tree_set_t *iface, void *item);
+```
+
+Removes an item from a tree set.\
+Returns `TRUE` if an item was removed (before exists in the set), otherwise `FALSE`.
+
+## Parameters
+
+Argument|Description
+--------|-----------
+iface|Pointer to a `tree_set_t` interface
+item|An item
+
+## Complexity
+
+O(log<sub>2</sub>N)
+
+## Example
+
+```c
     #include "tree_set.h"
     #include <stdio.h>
     #include <string.h>
@@ -22,3 +47,11 @@
         destroy_tree_set(s);
         return 0;
     }
+```
+
+Output:
+
+    The size of the set is 4 items
+    Now, the size is 2 items
+    three
+    two
