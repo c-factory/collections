@@ -141,13 +141,13 @@ bt_node_t * remove_node_from_balanced_tree(bt_node_t *root, void *key, int (*com
 	}
 }
 
-void traverse_over_balanced_tree(bt_node_t *root, void (*callback)(void*))
+void traverse_over_balanced_tree(bt_node_t *root, void (*callback)(void*, void*), void *obj)
 {
 	if (root->left)
-		traverse_over_balanced_tree(root->left, callback);
-	callback(root->key);
+		traverse_over_balanced_tree(root->left, callback, obj);
+	callback(obj, root->key);
 	if (root->right)
-		traverse_over_balanced_tree(root->right, callback);
+		traverse_over_balanced_tree(root->right, callback, obj);
 }
 
 typedef enum

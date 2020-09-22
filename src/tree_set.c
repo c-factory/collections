@@ -115,10 +115,10 @@ bool remove_item_from_tree_set(tree_set_t *iface, void *item)
     return true;
 }
 
-void traverse_over_tree_set(tree_set_t *iface, void (*callback)(void*))
+void traverse_over_tree_set(tree_set_t *iface, void (*callback)(void*, void*), void* obj)
 {
     tree_set_impl_t *this = (tree_set_impl_t*)iface;
-    traverse_over_balanced_tree(this->root, callback);
+    traverse_over_balanced_tree(this->root, callback, obj);
 }
 
 iterator_t * create_iterator_from_tree_set(tree_set_t *iface)

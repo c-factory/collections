@@ -34,4 +34,5 @@ The field cannot be modified directly. All changes are performed with functions 
 * **[add_item_to_tree_set](add_item_to_tree_set.md)** - adds an item to a tree set;
 * **[is_there_item_in_tree_set](is_there_item_in_tree_set.md)** - checks if there is an item in a tree set;
 * **[remove_item_from_tree_set](remove_item_from_tree_set.md)** - removes an item from a tree set;
-* **[create_iterator_from_tree_set](create_iterator_from_tree_set.md)** - returns an iterator, created from a tree set.
+* **[create_iterator_from_tree_set](create_iterator_from_tree_set.md)** - returns an iterator, created from a tree set;
+* **[traverse_over_tree_set](traverse_over_tree_set.md)** - traverses over a tree set and calls a callback, without iterator creation.

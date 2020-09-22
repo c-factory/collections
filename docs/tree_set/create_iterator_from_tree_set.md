@@ -6,7 +6,8 @@
     iterator_t * create_iterator_from_tree_set(tree_set_t *iface);
 ```
 
-Returns an [iterator](../iterator/iterator.md), created from a tree set.
+Returns an [iterator](../iterator/iterator.md), created from a tree set.\
+Because the tree set structure is built on a balanced binary tree, the iterator will traverse the tree in ascending order of items.
 
 ## Parameters
 
