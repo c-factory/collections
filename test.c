@@ -10,13 +10,13 @@ int main(void)
     add_pair_to_tree_map(map, "two", "2");
     add_pair_to_tree_map(map, "three", "3");
     add_pair_to_tree_map(map, "four", "4");
-    iterator_t *iter = create_iterator_from_tree_map(map);
-    while(has_next_item(iter))
+    map_iterator_t *iter = create_iterator_from_tree_map(map);
+    while(has_next_pair(iter))
     {
-        pair_t pair = get_pair_from_tree_map(map, next_item(iter));
-        printf("%s -> %s\n", pair.key, pair.value);
+        const pair_t *pair = get_pair_from_tree_map(map, next_pair(iter)->key);
+        printf("%s -> %s\n", pair->key, pair->value);
     }
-    destroy_iterator(iter);
+    destroy_map_iterator(iter);
     destroy_tree_map(map);
     return 0;
 }

@@ -173,6 +173,7 @@ typedef struct
     bt_traversal_data_t *data;
 	int max_depth;
 	int depth;
+	void*(*converter)(bt_node_t*);
 } bt_iterator_t;
 
 static void destroy_bt_iterator(iterator_t *iface)
@@ -254,12 +255,12 @@ static void * bt_iterator_get_next_item(iterator_t *iface)
 {
     bt_iterator_t *this = (bt_iterator_t*)iface;
 	assert(this->data[this->depth].state == state_next_this);
-	void *item = this->data[this->depth].node->key;
+	void *item = this->converter(this->data[this->depth].node);
 	prepare_next_item(this);
 	return item;
 }
 
-iterator_t * create_iterator_from_balanced_tree(bt_node_t *root, const allocator_t *allocator)
+iterator_t * create_iterator_from_balanced_tree(bt_node_t *root, const allocator_t *allocator, void*(*converter)(bt_node_t*))
 {
 	bt_iterator_t *this = allocator->allocate(sizeof(bt_iterator_t));
 	this->destroy = destroy_bt_iterator;
@@ -267,6 +268,7 @@ iterator_t * create_iterator_from_balanced_tree(bt_node_t *root, const allocator
 	this->next = bt_iterator_get_next_item;
 	this->allocator = allocator;
 	this->depth = -1;
+	this->converter = converter;
 	if (!root)
 	{
 		this->max_depth = 0;

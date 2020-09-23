@@ -20,11 +20,32 @@ typedef  struct
     void *value;
 } pair_t;
 
+typedef struct
+{
+    iterator_t base;
+} map_iterator_t;
+
 tree_map_t * create_tree_map(int (*comparator)(void*, void*));
 void destroy_tree_map(tree_map_t *iface);
 bool add_pair_to_tree_map(tree_map_t *iface, void *key, void *value);
-pair_t get_pair_from_tree_map (tree_map_t *iface, void *key);
-iterator_t * create_iterator_from_tree_map(tree_map_t *iface);
+const pair_t * get_pair_from_tree_map (tree_map_t *iface, void *key);
+map_iterator_t * create_iterator_from_tree_map(tree_map_t *iface);
+
+static __inline void destroy_map_iterator(map_iterator_t *iface)
+{
+    destroy_iterator(&iface->base);
+}
+
+static __inline bool has_next_pair(map_iterator_t *iface)
+{
+    return has_next_item(&iface->base);
+}
+
+static __inline const pair_t * next_pair(map_iterator_t *iface)
+{
+    return (const pair_t*)next_item(&iface->base);
+}
+
 /*
 tree_set_t * create_tree_set_ext(int (*comparator)(void*, void*), const allocator_t *allocator);
 void destroy_tree_set(tree_set_t *iface);

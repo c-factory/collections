@@ -9,7 +9,7 @@
 typedef struct tree_map
 {
     bt_node_t base;
-    void *value;
+    pair_t pair;
 } map_node_t;
 
 typedef struct
@@ -77,29 +77,30 @@ bool add_pair_to_tree_map(tree_map_t *iface, void *key, void *value)
     map_node_t *node = this->allocator->allocate(sizeof(map_node_t));
     init_node_of_balanced_tree(&node->base);
     node->base.key = key;
-    node->value = value;
+    node->pair.key = key;
+    node->pair.value = value;
     this->root = (map_node_t*)insert_node_into_balanced_tree(&this->root->base, &node->base, this->comparator);
     this->size++;
     return true;
 }
 
-pair_t get_pair_from_tree_map (tree_map_t *iface, void *key)
+const pair_t * get_pair_from_tree_map (tree_map_t *iface, void *key)
 {
-    pair_t result = {0};
     tree_map_impl_t *this = (tree_map_impl_t*)iface;
     map_node_t *node = (map_node_t*)find_node_in_balanced_tree(&this->root->base, key, this->comparator);
-    if (node)
-    {
-        result.key = node->base.key;
-        result.value = node->value;
-    }
-    return result;
+    return node ? &node->pair : NULL;
 }
 
-iterator_t * create_iterator_from_tree_map(tree_map_t *iface)
+static void * node_converter(bt_node_t *node)
+{
+    map_node_t *map_node = (map_node_t*)node;
+    return &map_node->pair;
+}
+
+map_iterator_t * create_iterator_from_tree_map(tree_map_t *iface)
 {
     tree_map_impl_t *this = (tree_map_impl_t*)iface;
-    return create_iterator_from_balanced_tree(&this->root->base, this->allocator);
+    return (map_iterator_t*)create_iterator_from_balanced_tree(&this->root->base, this->allocator, node_converter);
 }
 
 /*

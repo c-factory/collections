@@ -119,8 +119,13 @@ void traverse_over_tree_set(tree_set_t *iface, void (*callback)(void*, void*), v
     traverse_over_balanced_tree(this->root, callback, obj);
 }
 
+static void * node_converter(bt_node_t *node)
+{
+    return node->key;
+}
+
 iterator_t * create_iterator_from_tree_set(tree_set_t *iface)
 {
     tree_set_impl_t *this = (tree_set_impl_t*)iface;
-    return create_iterator_from_balanced_tree(this->root, this->allocator);
+    return create_iterator_from_balanced_tree(this->root, this->allocator, node_converter);
 }
