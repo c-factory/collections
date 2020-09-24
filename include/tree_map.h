@@ -30,9 +30,9 @@ tree_map_t * create_tree_map_ext(int (*comparator)(void*, void*), const allocato
 void destroy_tree_map(tree_map_t *iface);
 void destroy_tree_map_and_content(tree_map_t *iface,
             void (*key_destructor)(void *), void (*value_destructor)(void *));
-bool add_pair_to_tree_map(tree_map_t *iface, void *key, void *value);
+void * add_pair_to_tree_map(tree_map_t *iface, void *key, void *value);
 const pair_t * get_pair_from_tree_map (tree_map_t *iface, void *key);
-void * remove_item_from_tree_map(tree_map_t *iface, void *key);
+void * remove_pair_from_tree_map(tree_map_t *iface, void *key);
 map_iterator_t * create_iterator_from_tree_map(tree_map_t *iface);
 void traverse_over_tree_map(tree_map_t *iface, void (*callback)(void*, pair_t*), void* obj);
 

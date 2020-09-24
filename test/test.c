@@ -61,6 +61,7 @@ typedef struct
 } test_t;
 
 #define assert_equals(a, b) if (a != b) { result = false; goto done; }
+#define assert_diff(a, b) if (a == b) { result = false; goto done; }
 
 static void string_destructor(void* ptr)
 {
@@ -424,30 +425,53 @@ done:
     return result;
 }
 
-/*
-static bool test_create_tree_map_and_add_twice()
+static bool test_create_tree_map_and_add_pairs_twice()
 {
     bool result = true;
     tree_map_t *tm = create_tree_map_ext((void*)strcmp, &debug_allocator);
     size_t k;
+    void *old_value;
     for (k = 0; k < count_of_map_keys; k++)
-        add_pair_to_tree_map(tm, (void*)map_keys[k], (void*)&map_values[k]);
-    assert_equals(tm->size, count_of_map_keys);
-    k = 0;
-    map_iterator_t *i = create_iterator_from_tree_map(tm);
-    while(has_next_pair(i))
     {
-        const pair_t *p = next_pair(i);
-        assert_equals(0, strcmp(p->key, map_sorted_keys[k]));
-        assert_equals(*((int*)p->value), map_sorted_values[k]);
-        k++;
+        old_value = add_pair_to_tree_map(tm, (void*)map_keys[k], (void*)&map_values[k]);
+        assert_equals(old_value, NULL);
     }
-    destroy_map_iterator(i);
+    for (k = 0; k < count_of_map_keys; k++)
+    {
+        old_value = add_pair_to_tree_map(tm, (void*)map_keys[k], NULL);
+        assert_equals(old_value, &map_values[k]);
+    }
 done:
     destroy_tree_map(tm);
     return result;
 }
-*/
+
+static bool test_seek_and_destroy_data_in_tree_map()
+{
+    bool result = true;
+    tree_map_t *tm = create_tree_map_ext((void*)strcmp, &debug_allocator);
+    size_t k;
+    const pair_t *pair;
+    void *value;
+    for (k = 0; k < count_of_map_keys; k++)
+        add_pair_to_tree_map(tm, (void*)map_keys[k], (void*)&map_values[k]);
+    assert_equals(tm->size, count_of_map_keys);
+    for (k = 0; k < count_of_map_keys; k++)
+    {
+        pair = get_pair_from_tree_map(tm, (void*)map_keys[k]);
+        assert_diff(pair, NULL);
+        value = remove_pair_from_tree_map(tm, (void*)map_keys[k]);
+        assert_equals(value, &map_values[k]);
+        pair = get_pair_from_tree_map(tm, (void*)map_keys[k]);
+        assert_equals(pair, NULL);
+        value = remove_pair_from_tree_map(tm, (void*)map_keys[k]);
+        assert_equals(value, NULL);
+    }
+    assert_equals(tm->size, 0);
+done:
+    destroy_tree_map(tm);
+    return result;
+}
 
 test_t test_list [] =
 {
@@ -465,6 +489,8 @@ test_t test_list [] =
     { "seek and destroy data in tree set", test_seek_and_destroy_data_in_tree_set },
     { "create and traverse tree map", test_create_and_traverse_tree_map },
     { "create and destroy tree map with content", test_create_and_destroy_tree_map_with_content },
+    { "create tree map and add pairs twice", test_create_tree_map_and_add_pairs_twice },
+    { "seek and destroy data in tree map", test_seek_and_destroy_data_in_tree_map },
 };
 
 int main(void)

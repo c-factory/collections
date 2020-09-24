@@ -90,12 +90,16 @@ void destroy_tree_map_and_content(tree_map_t *iface,
     this->allocator->release(this, sizeof(tree_map_impl_t));
 }
 
-bool add_pair_to_tree_map(tree_map_t *iface, void *key, void *value)
+void * add_pair_to_tree_map(tree_map_t *iface, void *key, void *value)
 {
     tree_map_impl_t *this = (tree_map_impl_t*)iface;
-    bt_node_t *old_node = find_node_in_balanced_tree(&this->root->base, key, this->comparator);
-    if (old_node)
-        return false;
+    map_node_t *existing_node = (map_node_t*)find_node_in_balanced_tree(&this->root->base, key, this->comparator);
+    if (existing_node)
+    {
+        void *old_value = existing_node->pair.value;
+        existing_node->pair.value = value;
+        return old_value;
+    }
     map_node_t *node = this->allocator->allocate(sizeof(map_node_t));
     init_node_of_balanced_tree(&node->base);
     node->base.key = key;
@@ -103,7 +107,7 @@ bool add_pair_to_tree_map(tree_map_t *iface, void *key, void *value)
     node->pair.value = value;
     this->root = (map_node_t*)insert_node_into_balanced_tree(&this->root->base, &node->base, this->comparator);
     this->size++;
-    return true;
+    return NULL;
 }
 
 const pair_t * get_pair_from_tree_map (tree_map_t *iface, void *key)
@@ -113,7 +117,7 @@ const pair_t * get_pair_from_tree_map (tree_map_t *iface, void *key)
     return node ? &node->pair : NULL;
 }
 
-void * remove_item_from_tree_map(tree_map_t *iface, void *key)
+void * remove_pair_from_tree_map(tree_map_t *iface, void *key)
 {
     tree_map_impl_t *this = (tree_map_impl_t*)iface;
     map_node_t *removed_item = NULL;
