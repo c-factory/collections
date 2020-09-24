@@ -113,15 +113,15 @@ bool remove_item_from_tree_set(tree_set_t *iface, void *item)
     return true;
 }
 
-void traverse_over_tree_set(tree_set_t *iface, void (*callback)(void*, void*), void* obj)
-{
-    tree_set_impl_t *this = (tree_set_impl_t*)iface;
-    traverse_over_balanced_tree(this->root, callback, obj);
-}
-
 static void * node_converter(bt_node_t *node)
 {
     return node->key;
+}
+
+void traverse_over_tree_set(tree_set_t *iface, void (*callback)(void*, void*), void* obj)
+{
+    tree_set_impl_t *this = (tree_set_impl_t*)iface;
+    traverse_over_balanced_tree(this->root, callback, obj, node_converter);
 }
 
 iterator_t * create_iterator_from_tree_set(tree_set_t *iface)

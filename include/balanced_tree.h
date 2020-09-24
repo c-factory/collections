@@ -24,5 +24,5 @@ void init_node_of_balanced_tree(bt_node_t *node);
 bt_node_t * insert_node_into_balanced_tree(bt_node_t *root, bt_node_t *node, int (*comparator)(void*, void*));
 bt_node_t * find_node_in_balanced_tree(bt_node_t *root, void *key, int (*comparator)(void*, void*));
 bt_node_t * remove_node_from_balanced_tree(bt_node_t *root, void *key, int (*comparator)(void*, void*), bt_node_t **removed_node);
-void traverse_over_balanced_tree(bt_node_t *root, void (*callback)(void*, void*), void *obj);
-iterator_t * create_iterator_from_balanced_tree(bt_node_t *root, const allocator_t *allocator, void*(*reader)(bt_node_t*));
+void traverse_over_balanced_tree(bt_node_t *root, void (*callback)(void*, void*), void *obj, void*(*converter)(bt_node_t*));
+iterator_t * create_iterator_from_balanced_tree(bt_node_t *root, const allocator_t *allocator, void*(*converter)(bt_node_t*));
