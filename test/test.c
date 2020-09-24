@@ -6,6 +6,8 @@
 
 #include "vector.h"
 #include "tree_set.h"
+#include "tree_map.h"
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -59,6 +61,25 @@ typedef struct
 } test_t;
 
 #define assert_equals(a, b) if (a != b) { result = false; goto done; }
+
+static void string_destructor(void* ptr)
+{
+    dbg_release(ptr, strlen((char*)ptr) + 1);
+}
+
+static void int_destructor(void* ptr)
+{
+    dbg_release(ptr, sizeof(int));
+}
+
+static int int_comparator(void *a, void *b)
+{
+    int *ia = (int*)a;
+    int *ib = (int*)b;
+    if (*ia > *ib) return 1;
+    else if (*ia < *ib) return -1;
+    else return 0;
+}
 
 // --- vector -----------------------------------------------------------------
 
@@ -153,20 +174,6 @@ done:
     return result;
 }
 
-static void int_destructor(void* ptr)
-{
-    dbg_release(ptr, sizeof(int));
-}
-
-static int int_comparator(void *a, void *b)
-{
-    int *ia = (int*)a;
-    int *ib = (int*)b;
-    if (*ia > *ib) return 1;
-    else if (*ia < *ib) return -1;
-    else return 0;
-}
-
 static bool test_vector_index_of_and_destructor()
 {
     bool result = true;
@@ -256,7 +263,7 @@ static const char* tree_set_sorted_data[] =
     "point", "selection", "terminal", "terminator", "vector", "view"  
 };
 
-static size_t size_of_tree_set_data = sizeof(tree_set_data) / sizeof(char*);
+static const size_t size_of_tree_set_data = sizeof(tree_set_data) / sizeof(char*);
 
 static bool test_create_and_traverse_tree_set()
 {
@@ -279,11 +286,6 @@ static bool test_create_and_traverse_tree_set()
 done:
     destroy_tree_set(ts);
     return result;
-}
-
-static void string_destructor(void* ptr)
-{
-    dbg_release(ptr, strlen((char*)ptr) + 1);
 }
 
 static bool test_create_and_destroy_tree_set_with_content()
@@ -361,6 +363,92 @@ done:
     return result;
 }
 
+// --- tree map ---------------------------------------------------------------
+
+static const char** map_keys = tree_set_data;
+static const size_t count_of_map_keys = size_of_tree_set_data;
+static const char** map_sorted_keys = tree_set_sorted_data;
+static const int map_values[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+static const int map_sorted_values[] = {13, 12, 5, 9, 1, 8, 10, 4, 2, 6, 7, 11, 3};
+
+static bool test_create_and_traverse_tree_map()
+{
+    bool result = true;
+    tree_map_t *tm = create_tree_map_ext((void*)strcmp, &debug_allocator);
+    size_t k;
+    for (k = 0; k < count_of_map_keys; k++)
+        add_pair_to_tree_map(tm, (void*)map_keys[k], (void*)&map_values[k]);
+    assert_equals(tm->size, count_of_map_keys);
+    k = 0;
+    map_iterator_t *i = create_iterator_from_tree_map(tm);
+    while(has_next_pair(i))
+    {
+        const pair_t *p = next_pair(i);
+        assert_equals(0, strcmp(p->key, map_sorted_keys[k]));
+        assert_equals(*((int*)p->value), map_sorted_values[k]);
+        k++;
+    }
+    destroy_map_iterator(i);
+done:
+    destroy_tree_map(tm);
+    return result;
+}
+
+static bool test_create_and_destroy_tree_map_with_content()
+{
+    bool result = true;
+    tree_map_t *tm = create_tree_map_ext((void*)strcmp, &debug_allocator);
+    size_t k;
+    for (k = 0; k < count_of_map_keys; k++)
+    {
+        size_t len = strlen(map_keys[k]);
+        char *key_copy = debug_allocator.allocate(len + 1);
+        memcpy(key_copy, map_keys[k], len + 1);
+        int *value_copy = debug_allocator.allocate(sizeof(int));
+        *value_copy = map_values[k];
+        add_pair_to_tree_map(tm, (void*)key_copy, (void*)value_copy);
+    }
+    assert_equals(tm->size, count_of_map_keys);
+    k = 0;
+    map_iterator_t *i = create_iterator_from_tree_map(tm);
+    while(has_next_pair(i))
+    {
+        const pair_t *p = next_pair(i);
+        assert_equals(0, strcmp(p->key, map_sorted_keys[k]));
+        assert_equals(*((int*)p->value), map_sorted_values[k]);
+        k++;
+    }
+    destroy_map_iterator(i);
+done:
+    destroy_tree_map_and_content(tm, string_destructor, int_destructor);
+    return result;
+}
+
+/*
+static bool test_create_tree_map_and_add_twice()
+{
+    bool result = true;
+    tree_map_t *tm = create_tree_map_ext((void*)strcmp, &debug_allocator);
+    size_t k;
+    for (k = 0; k < count_of_map_keys; k++)
+        add_pair_to_tree_map(tm, (void*)map_keys[k], (void*)&map_values[k]);
+    assert_equals(tm->size, count_of_map_keys);
+    k = 0;
+    map_iterator_t *i = create_iterator_from_tree_map(tm);
+    while(has_next_pair(i))
+    {
+        const pair_t *p = next_pair(i);
+        assert_equals(0, strcmp(p->key, map_sorted_keys[k]));
+        assert_equals(*((int*)p->value), map_sorted_values[k]);
+        k++;
+    }
+    destroy_map_iterator(i);
+done:
+    destroy_tree_map(tm);
+    return result;
+}
+*/
+
 test_t test_list [] =
 {
     { "create vector and check size", test_create_vector_and_check_size },
@@ -375,6 +463,8 @@ test_t test_list [] =
     { "create and destroy tree set with content", test_create_and_destroy_tree_set_with_content },
     { "create tree set and add data twice", test_create_tree_set_and_add_data_twice },
     { "seek and destroy data in tree set", test_seek_and_destroy_data_in_tree_set },
+    { "create and traverse tree map", test_create_and_traverse_tree_map },
+    { "create and destroy tree map with content", test_create_and_destroy_tree_map_with_content },
 };
 
 int main(void)
