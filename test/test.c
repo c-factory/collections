@@ -266,7 +266,7 @@ static const char* tree_set_sorted_data[] =
 
 static const size_t size_of_tree_set_data = sizeof(tree_set_data) / sizeof(char*);
 
-static bool test_create_and_traverse_tree_set()
+static bool test_create_and_iterate_tree_set()
 {
     bool result = true;
 
@@ -284,6 +284,36 @@ static bool test_create_and_traverse_tree_set()
         k++;
     }
     destroy_iterator(i);
+done:
+    destroy_tree_set(ts);
+    return result;
+}
+
+typedef struct
+{
+    size_t k;
+    bool error;
+} tree_set_traversal_data_t;
+
+void tree_set_callback(void *obj, void *item)
+{
+    tree_set_traversal_data_t *data = (tree_set_traversal_data_t*)obj;
+    if (0 != strcmp(tree_set_sorted_data[data->k], (char*)item))
+        data->error = true;
+    data->k++;
+}
+
+static bool test_create_and_traverse_tree_set()
+{
+    bool result = true;
+    tree_set_t *ts = create_tree_set_ext((void*)strcmp, &debug_allocator);
+    size_t k;
+    for (k = 0; k < size_of_tree_set_data; k++)
+        add_item_to_tree_set(ts, (void*)tree_set_data[k]);
+    tree_set_traversal_data_t data = {0};
+    traverse_over_tree_set(ts, tree_set_callback, &data);
+    assert_equals(data.error, false);
+    assert_equals(data.k, size_of_tree_set_data);
 done:
     destroy_tree_set(ts);
     return result;
@@ -372,7 +402,7 @@ static const char** map_sorted_keys = tree_set_sorted_data;
 static const int map_values[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 static const int map_sorted_values[] = {13, 12, 5, 9, 1, 8, 10, 4, 2, 6, 7, 11, 3};
 
-static bool test_create_and_traverse_tree_map()
+static bool test_create_and_iterate_tree_map()
 {
     bool result = true;
     tree_map_t *tm = create_tree_map_ext((void*)strcmp, &debug_allocator);
@@ -390,6 +420,39 @@ static bool test_create_and_traverse_tree_map()
         k++;
     }
     destroy_map_iterator(i);
+done:
+    destroy_tree_map(tm);
+    return result;
+}
+
+typedef struct
+{
+    size_t k;
+    bool error;
+} tree_map_traversal_data_t;
+
+void tree_map_callback(void *obj, pair_t* pair)
+{
+    tree_map_traversal_data_t *data = (tree_map_traversal_data_t*)obj;
+    if (0 != strcmp(map_sorted_keys[data->k], (char*)pair->key))
+        data->error = true;
+    if (map_sorted_values[data->k] != *((int*)pair->value))
+        data->error = true;
+    data->k++;
+}
+
+static bool test_create_and_traverse_tree_map()
+{
+    bool result = true;
+    tree_map_t *tm = create_tree_map_ext((void*)strcmp, &debug_allocator);
+    size_t k;
+    for (k = 0; k < count_of_map_keys; k++)
+        add_pair_to_tree_map(tm, (void*)map_keys[k], (void*)&map_values[k]);
+    assert_equals(tm->size, count_of_map_keys);
+    tree_map_traversal_data_t data = {0};
+    traverse_over_tree_map(tm, tree_map_callback, &data);
+    assert_equals(data.error, false);
+    assert_equals(data.k, count_of_map_keys);
 done:
     destroy_tree_map(tm);
     return result;
@@ -483,10 +546,12 @@ test_t test_list [] =
     { "vector's set", test_vector_set },
     { "vector's insert", test_vector_insert },
     { "vector's remove", test_vector_remove },
+    { "create and iterate tree set", test_create_and_iterate_tree_set },
     { "create and traverse tree set", test_create_and_traverse_tree_set },
     { "create and destroy tree set with content", test_create_and_destroy_tree_set_with_content },
     { "create tree set and add data twice", test_create_tree_set_and_add_data_twice },
     { "seek and destroy data in tree set", test_seek_and_destroy_data_in_tree_set },
+    { "create and iterate tree map", test_create_and_iterate_tree_map },
     { "create and traverse tree map", test_create_and_traverse_tree_map },
     { "create and destroy tree map with content", test_create_and_destroy_tree_map_with_content },
     { "create tree map and add pairs twice", test_create_tree_map_and_add_pairs_twice },
