@@ -1,22 +1,26 @@
-#include "tree_map.h"
-#include <string.h>
-#include <stdio.h>
+    #include "tree_map.h"
+    #include <stdio.h>
+    #include <string.h>
 
-int main(void)
-{
-    tree_map_t *map = create_tree_map((void*)strcmp);
-    add_pair_to_tree_map(map, "zero", "0");
-    add_pair_to_tree_map(map, "one", "1");
-    add_pair_to_tree_map(map, "two", "2");
-    add_pair_to_tree_map(map, "three", "3");
-    add_pair_to_tree_map(map, "four", "4");
-    map_iterator_t *iter = create_iterator_from_tree_map(map);
-    while(has_next_pair(iter))
+    void print(const char* key, const char *value) // the function as an object
     {
-        const pair_t *pair = get_pair_from_tree_map(map, next_pair(iter)->key);
-        printf("%s -> %s\n", pair->key, pair->value);
+        printf("%s -> %s\n", key, value);
     }
-    destroy_map_iterator(iter);
-    destroy_tree_map(map);
-    return 0;
-}
+
+    void callback(void *obj, pair_t *pair)
+    {
+        void (*fn)(const char*, const char*) = obj;
+        fn(pair->key, pair->value);
+    }
+
+    int main()
+    {
+        tree_map_t *map = create_tree_map((void*)strcmp);
+        add_pair_to_tree_map(map, "zero", "0");
+        add_pair_to_tree_map(map, "one", "1");
+        add_pair_to_tree_map(map, "two", "2");
+        add_pair_to_tree_map(map, "three", "3");
+        traverse_over_tree_map(map, callback, print);
+        destroy_tree_map(map);
+        return 0;
+    }
