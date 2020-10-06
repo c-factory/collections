@@ -6,7 +6,7 @@
     const pair_t * get_pair_from_tree_map(tree_map_t *iface, void *key);
 ```
 
-Returns a pair by key from a tree map.
+Returns a [pair](../map/pair.md) by key from a tree map.
 
 ## Parameters
 

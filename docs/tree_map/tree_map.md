@@ -35,5 +35,5 @@ The field cannot be modified directly. All changes are performed with functions 
 * **[add_pair_to_tree_map](add_pair_to_tree_map.md)** - adds a pair to a tree map;
 * **[get_pair_from_tree_map](get_pair_from_tree_map.md)** - returns a pair by key from a tree map;
 * **[remove_pair_from_tree_map](remove_pair_from_tree_map.md)** - removes a pair from a tree map;
-* **[create_iterator_from_tree_map](create_iterator_from_tree_map.md)** - returns an iterator, created from a tree map;
+* **[create_iterator_from_tree_map](create_iterator_from_tree_map.md)** - returns a [map iterator](../map/map_iterator.md), created from a tree map;
 * **[traverse_over_tree_map](traverse_over_tree_map.md)** - traverses over a tree map and calls a callback, without iterator creation.

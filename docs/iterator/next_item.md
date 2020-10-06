@@ -6,7 +6,7 @@
     void * next_item(iterator_t *iface);
 ```
 
-returns the next item from the iterator, or `NULL`, if the iterator is empty.
+Returns the next item from an iterator, or `NULL`, if an iterator is empty.
 
 ## Parameters
 

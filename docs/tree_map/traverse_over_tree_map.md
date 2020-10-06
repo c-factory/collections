@@ -14,7 +14,7 @@ Because the tree map structure is built on a balanced binary tree, the function 
 Argument|Description
 --------|-----------
 iface|Pointer to a `tree_map_t` interface
-callback|A callback that takes two arguments: first is any pointer, and second is a pair of a map
+callback|A callback that takes two arguments: first is any pointer, and second is a [pair](../map/pair.md) that is contained in the map
 obj|An object that will pass as the first argument
 
 ## Example

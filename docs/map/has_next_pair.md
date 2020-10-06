@@ -1,21 +1,18 @@
-[Collections](../collections.md) &rarr; [Tree Map](tree_map.md) &rarr;
+[Collections](../collections.md) &rarr; [Map](map.md) &rarr; [Map Iterator](map_iterator.md) &rarr; 
 
-# create_iterator_from_tree_map
+# has_next_pair
 
 ```c
-    map_iterator_t * create_iterator_from_tree_map(tree_map_t *iface);
+    bool has_next_pair(map_iterator_t *iface);
 ```
 
-Returns a [map iterator](../map/map_iterator.md), created from a tree map.\
-Because the tree map structure is built on a balanced binary tree, the iterator will traverse the tree in ascending order of keys.
+Checks if there are more pairs in a map iterator.
 
 ## Parameters
 
 Argument|Description
 --------|-----------
-iface|Pointer to a `tree_map_t` interface
-
-## Example
+iface|Pointer to a `map_iterator_t` interface
 
 ## Example
 
@@ -33,7 +30,7 @@ iface|Pointer to a `tree_map_t` interface
         add_pair_to_tree_map(map, "three", "3");
         add_pair_to_tree_map(map, "four", "4");
         map_iterator_t *iter = create_iterator_from_tree_map(map);
-        while(has_next_pair(iter))
+        while(has_next_pair(iter)) // here we check if there is another pair
         {
             const pair_t *pair = next_pair(iter);
             printf("%s -> %s\n", pair->key, pair->value);
@@ -43,11 +40,3 @@ iface|Pointer to a `tree_map_t` interface
         return 0;
     }
 ```
-
-Output:
-
-    four -> 4
-    one -> 1
-    three -> 3
-    two -> 2
-    zero -> 0
