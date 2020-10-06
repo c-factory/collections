@@ -6,7 +6,7 @@
     bool has_next_item(iterator_t *iface);
 ```
 
-Checks if there are more items in the iterator.
+Checks if there are more items in an iterator.
 
 ## Parameters
 

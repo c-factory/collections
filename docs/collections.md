@@ -12,6 +12,7 @@ Here the list of all classes:
 
 * **[Vector](vector/vector.md)** - a container in which elements are stored contiguously;
 * **[Tree Set](tree_set/tree_set.md)** - a set of unique items, based on binary balanced tree;
+* **[Tree Map](tree_map/tree_map.md)** - a set of pairs key-value, in which each key is unique, based on binary balanced tree;
 
 ## Data access
 

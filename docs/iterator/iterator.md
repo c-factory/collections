@@ -34,6 +34,6 @@ The `iterator_t` struct contains 3 function pointers:
 
 Here defined 3 helper function, each is a wrapper around the corresponding function pointer:
 
-* **[destroy_iterator](destroy_iterator.md)** - destructs the iterator;
-* **[has_next_item](has_next_item.md)** - checks if there are more items in the iterator;
-* **[next_item](next_item.md)** - returns the next item from the iterator.
+* **[destroy_iterator](destroy_iterator.md)** - destructs an iterator;
+* **[has_next_item](has_next_item.md)** - checks if there are more items in an iterator;
+* **[next_item](next_item.md)** - returns the next item from an iterator.

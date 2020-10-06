@@ -6,7 +6,7 @@
     void destroy_iterator(iterator_t *iface);
 ```
 
-Destructs the iterator.
+Destructs an iterator.
 
 ## Parameters
 
