@@ -7,7 +7,7 @@
 #include "allocator.h"
 #include <stdio.h>
 
-static void * sys_allocate(size_t size)
+void * nnalloc(size_t size)
 {
     void * ptr = malloc(size);
     if (!ptr)
@@ -25,7 +25,7 @@ static void sys_release(void *ptr, size_t size)
 
 static allocator_t system_allocator =
 {
-    sys_allocate,
+    nnalloc,
     sys_release
 };
 

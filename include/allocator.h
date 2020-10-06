@@ -14,4 +14,5 @@ typedef struct
     void (*release)(void*, size_t);
 } allocator_t;
 
-extern const allocator_t * get_system_allocator();
+void * nnalloc(size_t size);
+const allocator_t * get_system_allocator();

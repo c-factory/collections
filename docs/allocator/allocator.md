@@ -30,6 +30,7 @@ The `allocator_t` struct contains 2 function pointers:
 
 ## Functions
 
+* **[nnalloc](nnalloc.md)** - allocates a block of memory, returning a pointer to the beginning of the block, but never returns `NULL`;
 * **[get_system_allocator](get_system_allocator.md)** - returns the system ("standard") allocator, i.e. wrapper for the library functions `malloc` and `free`.
 
 ## Creating custom allocator
