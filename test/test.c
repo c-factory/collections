@@ -431,7 +431,7 @@ typedef struct
     bool error;
 } tree_map_traversal_data_t;
 
-void tree_map_callback(void *obj, pair_t* pair)
+void tree_map_callback(void *obj, const pair_t* pair)
 {
     tree_map_traversal_data_t *data = (tree_map_traversal_data_t*)obj;
     if (0 != strcmp(map_sorted_keys[data->k], (char*)pair->key))

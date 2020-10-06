@@ -3,7 +3,7 @@
 # traverse_over_tree_map
 
 ```c
-    void traverse_over_tree_map(tree_map_t *iface, void (*callback)(void*, pair_t*), void* obj);
+    void traverse_over_tree_map(tree_map_t *iface, void (*callback)(void*, const pair_t*), void* obj);
 ```
 
 Traverses over a map and calls a callback, without iterator creation.\
@@ -29,7 +29,7 @@ obj|An object that will pass as the first argument
         printf("%s -> %s\n", key, value);
     }
 
-    void callback(void *obj, pair_t *pair)
+    void callback(void *obj, const pair_t *pair)
     {
         void (*fn)(const char*, const char*) = obj;
         fn(pair->key, pair->value);

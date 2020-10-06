@@ -143,7 +143,7 @@ map_iterator_t * create_iterator_from_tree_map(tree_map_t *iface)
     return (map_iterator_t*)create_iterator_from_balanced_tree(&this->root->base, this->allocator, node_converter);
 }
 
-void traverse_over_tree_map(tree_map_t *iface, void (*callback)(void*, pair_t*), void* obj)
+void traverse_over_tree_map(tree_map_t *iface, void (*callback)(void*, const pair_t*), void* obj)
 {
     tree_map_impl_t *this = (tree_map_impl_t*)iface;
     traverse_over_balanced_tree(&this->root->base, (void(*)(void*, void*))callback, obj, node_converter);
