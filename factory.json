@@ -1,0 +1,8 @@
+{
+    "name": "collections",
+    "description": "The basic collections set, i.e. structures that contain data in a specified order",
+    "author": "c factory",
+    "type": "library",
+    "sources": "src/*.c",
+    "headers": "include"
+}
